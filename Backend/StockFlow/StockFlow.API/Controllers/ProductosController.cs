@@ -30,23 +30,23 @@ namespace StockFlow.API.Controllers
 
         // Agregar un nuevo producto a la lista
         [HttpPost]
-        public ActionResult<Producto> Post(Producto producto)
+        public ActionResult<Producto> Post(Producto productoPost)
         {
             //obtner el id mas alto de la lista de productos y sumarle 1 para asignarlo al nuevo producto
             int maxId = 0;
-            foreach (Producto product in productos)
+            foreach (Producto producto in productos)
             {
-                if (product.Id > maxId)
+                if (producto.Id > maxId)
                 {
-                    maxId = product.Id;
+                    maxId = producto.Id;
                 }
             }
-            producto.Id = maxId + 1;
+            productoPost.Id = maxId + 1;
 
 
-            productos.Add(producto);
+            productos.Add(productoPost);
 
-            return producto;
+            return productoPost;
         }
 
         //Obtener la lista completa de los productos
@@ -73,7 +73,22 @@ namespace StockFlow.API.Controllers
             return NotFound();
         }
 
-       
+        [HttpPut("{id}")]
+        public ActionResult<Producto> Put(int id, Producto productoPut)
+        {
+            foreach (Producto producto in productos)
+            {
+                if (producto.Id == id)
+                {
+                   producto.Nombre = productoPut.Nombre;
+                   producto.Descripcion = productoPut.Descripcion;
+                   producto.Precio = productoPut.Precio;
+                   producto.Stock = productoPut.Stock;
+                   return producto;
+                }
+            }
+            return NotFound();
+        }
     }
 }
 
