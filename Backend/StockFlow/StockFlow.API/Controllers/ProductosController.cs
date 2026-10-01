@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StockFlow.API.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace StockFlow.API.Controllers
 {
@@ -8,7 +7,7 @@ namespace StockFlow.API.Controllers
     [Route("api/productos")]
     public class ProductosController : ControllerBase
     {
-        List<Producto> productos = new List<Producto>
+        static List<Producto> productos = new List<Producto>
             {
 
                 new Producto
@@ -27,6 +26,28 @@ namespace StockFlow.API.Controllers
                 Stock = 30
                 }
             };
+
+
+        // Agregar un nuevo producto a la lista
+        [HttpPost]
+        public ActionResult<Producto> Post(Producto producto)
+        {
+            //obtner el id mas alto de la lista de productos y sumarle 1 para asignarlo al nuevo producto
+            int maxId = 0;
+            foreach (Producto product in productos)
+            {
+                if (product.Id > maxId)
+                {
+                    maxId = product.Id;
+                }
+            }
+            producto.Id = maxId + 1;
+
+
+            productos.Add(producto);
+
+            return producto;
+        }
 
         //Obtener la lista completa de los productos
         [HttpGet]
@@ -51,6 +72,8 @@ namespace StockFlow.API.Controllers
             }
             return NotFound();
         }
+
+       
     }
 }
 
